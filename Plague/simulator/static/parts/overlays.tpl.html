@@ -1,0 +1,172 @@
+<div class="modal fade" id="modal_country_details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="modal_country_name"></h4>
+			</div>
+			<div class="modal-body">
+
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#1" data-toggle="tab">Overview</a></li>
+					<li><a href="#2" data-toggle="tab">Statistics I</a></li>
+					<li><a href="#3" data-toggle="tab">Statistics II</a></li>
+					<li><a href="#4" data-toggle="tab">News</a></li>
+				</ul>
+
+				<div class="tab-content ">
+					<div class="tab-pane active" id="1">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-3">
+									<h4>Population</h4>
+								</div>
+								<div class="col-md-9">
+									<h4 id="modal-overview-population"></h4>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<h4>Infected</h4>
+								</div>
+								<div class="col-md-9">
+									<h4 id="modal-overview-i"></h4>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<h4>Susceptible</h4>
+								</div>
+								<div class="col-md-9">
+									<h4 id="modal-overview-s"></h4>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<h4>Recovered</h4>
+								</div>
+								<div class="col-md-9">
+									<h4 id="modal-overview-r"></h4>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<h4>Dead</h4>
+								</div>
+								<div class="col-md-9">
+									<h4 id="modal-overview-d"></h4>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+					<div class="tab-pane" id="2">
+						<canvas id="canvas-pie"></canvas>
+					</div>
+					<div class="tab-pane" id="3">
+						<canvas id="canvas-line"></canvas>
+					</div>
+					<div class="tab-pane" id="4">
+						<h3></h3>
+					</div>
+
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="fuckyou" class="panel panel-default day-display">
+	<div style="text-align: center;background: rgba(255,255,255,0) ;padding:5px;"><label id="lbl-day">Day 0</label></div>
+</div>
+
+<div class="gc-spinner"></div>
+<div class="gc-overlay">
+	<div class="gc-button gc-show-slide-menu">
+		<span class="gc-icon gc-icon-menu">
+			<span class="gc-inner"></span>
+		</span>
+	</div>
+	<div class="gc-button gc-zoom-plus">
+		<div class="gc-icon gc-icon-plus"></div>
+	</div>
+	<div class="gc-button gc-zoom-minus">
+		<div class="gc-icon gc-icon-minus"></div>
+	</div>
+	<div class="gc-button gc-settings">
+		<div class="gc-icon gc-icon-settings">
+			<div class="gc-inner"></div>
+		</div>
+		<div class="gc-icon gc-icon-settings-hide"></div>
+	</div>
+	<div class="gc-settings-wrapper">
+		<div class="gc-color-function-select-wrapper">
+			<div class="gc-icon gc-icon-select"></div>
+			<div class="gc-select-label"></div>
+			<select class="gc-button gc-color-function-select">
+				<option value="log"></option>
+				<option value="linear"></option>
+				<option value="quadratic"></option>
+				<option value="sqrt"></option>
+				<option value="cubicroot"></option>
+			</select>
+		</div>
+		<div class="gc-data-type-select-wrapper">
+			<div class="gc-icon gc-icon-select"></div>
+			<div class="gc-select-label"></div>
+			<select class="gc-button gc-data-type-select"></select>
+		</div>
+	</div>
+
+	<div class="gc-single-country-info">
+		<div class="gc-close">&times;</div>
+		<div class="gc-button gc-country-details">
+			<span id="btn_country_details" class="gc-icon gc-icon-fullscreen-open">
+				<span class="gc-inner"></span>
+			</span>
+		</div>
+		<div class="gc-wrapper"></div>
+	</div>
+	<div class="gc-slide-menu">
+		<div class="gc-hide-slide-menu-area"></div>
+		<div class="gc-menu">
+			<div class="gc-title">
+				<span class="gc-value"></span><span class="gc-date"></span>
+			</div>
+			<div class="gc-data-type-chooser">
+				<div class="gc-menu-separator-line"></div>
+				<div class="gc-scroll-pane"></div>
+			</div>
+			<div class="gc-list">
+				<a class="gc-csv-download" target="_blank">
+					<span class="gc-icon gc-icon-download"><span class="gc-inner"></span></span>
+					<span>.csv</span>
+				</a>
+				<div class="gc-scroll-pane">
+					<table>
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="gc-button gc-fullscreen-open">
+		<span class="gc-icon gc-icon-fullscreen-open">
+			<span class="gc-inner"></span>
+		</span>
+	</div>
+	<div class="gc-button gc-fullscreen-close">
+		<span class="gc-icon gc-icon-fullscreen-close">
+			<span class="gc-inner"></span>
+		</span>
+	</div>
+
+
+</div>

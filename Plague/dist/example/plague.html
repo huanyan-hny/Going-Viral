@@ -1,0 +1,315 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>geochart.js - Simple Example</title>
+	<meta name="description" content="geochart-js">
+	<meta name="viewport" content="width=device-width">
+	<link rel="stylesheet" href="../lib/jquery.jscrollpane.css">
+	<link rel="stylesheet" href="../../simulator/static/geochart.css">
+	<link rel="stylesheet" href="../../simulator/static/sidebar.css">
+
+
+
+	
+	<style type="text/css">
+		body {
+			background: white;
+			padding: 3px;
+			margin: 0;
+		}
+		#geochart-map {
+			width: 100%;
+			margin: 0 auto;
+		}
+
+		
+	</style>
+
+	<!-- dependencies -->
+	<script src="../lib/jquery.min.js"></script>
+	<script src="../lib/jquery.loadTemplate-1.4.5.min.js"></script>
+	<script src="../lib/jquery.mousewheel.js"></script>
+	<script src="../lib/jquery.jscrollpane.min.js"></script>
+	<script src="../lib/d3.min.js"></script>
+	<script src="../lib/topojson.js"></script>
+	<script src="../lib/moment.min.js"></script>
+	<script src="../lib/waitingfor.js"></script>
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/css/bootstrap-dialog.min.css" rel="stylesheet"
+			type="text/css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/js/bootstrap-dialog.min.js"></script>
+	<script src="../lib/chart.bundle.min.js"></script>
+	
+	<script src="../lib/bootstrap-datetimepicker.min.js"></script>
+	<link rel="stylesheet" href="../lib/bootstrap-datetimepicker.css">
+	
+
+	
+	<script src="../../simulator/static/hashmap.js"></script>
+
+	
+	<!-- geochart.js -->
+	<script src="../../simulator/static/geochart.js"></script>
+	
+</head>
+
+<body>
+	<!-- geochart-element -->
+	<div id="geochart-map"></div>
+
+
+
+	<div id="fullscreen-mask" class="fullscreen-mask" style="display:block">
+
+       <button id="singlebutton" name="singlebutton" class="btn btn-lg btn-primary center-block" style="margin-top:100px;opacity:1" data-toggle="modal" data-target="#dialog_configuration">
+			Set Configuration
+		</button>
+
+	</div>
+
+	<div class="modal fade" id="dialog_configuration" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="z-index:10000">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel">Register</h4>
+		  </div>
+		  <div class="modal-body">
+		  
+			<div class="input-group">
+			  <span class="input-group-addon configuration-addon">
+					<label>Start Country</label>
+			  </span>
+			<select id="list-country" class="form-control">
+			</select>
+			</div>
+			
+			<br/>
+			
+			<div class="input-group">
+			  <span class="input-group-addon configuration-addon">
+					<label>Infected Number</label>
+			  </span>
+			  <input id="input-population" class="form-control" aria-label="Text input with checkbox" placeholder=">0" required>
+			</div>
+
+			<br/>
+			
+			<div class="input-group">
+			  <span class="input-group-addon configuration-addon">
+					<label>Infection Rate</label>
+			  </span>
+			  <input id="input-i" class="form-control" aria-label="Text input with checkbox" placeholder="(0,1]" required>
+			</div>
+
+			<br/>
+						
+			<div class="input-group">
+			  <span class="input-group-addon configuration-addon">
+					<label>Recover Rate</label>
+			  </span>
+			  <input id="input-r" class="form-control" aria-label="Text input with checkbox" placeholder="[0,1]" required>
+			</div>
+
+			<br/>
+
+			
+			<div class="input-group">
+			  <span class="input-group-addon configuration-addon">
+					<label>Death Rate</label>
+			  </span>
+			  <input id="input-d" class="form-control" aria-label="Text input with checkbox" placeholder="[0,1]" required>
+			</div>
+
+			<br/>
+			
+			<div class="input-group">
+			  <span class="input-group-addon configuration-addon">
+					<label>Period</label>
+			  </span>
+			  <input id="input-period" type="text" class="form-control" aria-label="Text input with checkbox" placeholder="[1,365]" required>
+			</div>
+			
+			<br/>
+
+			<div class="input-group">
+			  <span class="input-group-addon configuration-addon">
+					<label>Date</label>
+			  </span>
+			    <input id="input-date" type="text" class="form-control" id="datetimepicker" />
+			</div>
+			
+			<script type="text/javascript">
+				$(function () {
+					$('#input-date').datetimepicker({
+					format: 'MM/DD/YYYY'
+					});
+				});
+			</script>			
+
+		  
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-primary" onclick="submit_plague()">Submit</button>
+		  </div>
+		</div>
+	  </div>
+	</div>	
+	
+
+
+
+
+	
+	<!-- initialization -->
+	<script type="text/javascript">
+
+	var timer = setInterval(
+		function(){
+			update_plague();
+		}
+	, 1000);
+	
+	function update_plague() {
+		return;
+		var data={"countries":{
+		"BD": {"code": "BD", "values": {"i": 0, "s": 0, "r": 0, "d": 0, "population": 160995640}, 
+			"continent": "", "label": "Bangladesh"},
+		 "BE": {"code": "BE", "values": {"i": 0, "s": 0, "r": 0, "d": 0, "population": 11285720}, 
+			"continent": "", "label": "Belgium"}
+		}}		
+		geochart.update_plague(data);			
+		return;
+	
+		$.ajax({
+		type: "GET",
+		url: "http://192.168.0.7:8080/sim/update_plague",
+		data: null,
+		dataType: 'text',
+		success: function(data){
+			geochart.update_plague(data);
+			
+			//				BootstrapDialog.alert("Register failed");
+			
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			alert("fuck you2");
+
+			}
+		});
+		
+	}
+	
+	function update_airlines() {
+	
+	}
+	
+	function submit_plague() {
+	
+		var country=$("#list-country").val();
+		var population= parseInt($("#input-population").val());
+		var i= parseFloat($("#input-i").val());
+		var r= parseFloat($("#input-r").val());
+		var d= parseFloat($("#input-d").val());
+		var period= parseInt($("#input-period").val());
+		var date=$("#input-date").val();
+		
+		if (country==null  
+			|| isNaN(population) || population<=0 
+			|| isNaN(i) || (i>1) || (i<=0)
+			|| isNaN(r) || (r>1) || (r<0)
+			|| isNaN(d) || (d>1) || (d<0)
+			|| isNaN(period) || (period>365) || (period<1)
+			|| date==null
+			)
+		{
+			alert("Invalid input");
+			return;
+		}
+		waitingDialog.show('I\'m waiting');
+		$('#dialog_configuration').modal('hide');	
+		$.ajax({
+		type: "GET",
+		url: "http://192.168.0.7:8080/sim/submit_plague",
+		data: {
+			country:country,
+			population:population,
+			s:1.0,
+			i:i,
+			r:r,
+			d:d,
+			period:period,
+			date:date,
+		},
+		dataType: 'text',
+		success: function(msgResult){
+			$("#fullscreen-mask").hide();
+			waitingDialog.hide();
+			
+			//				BootstrapDialog.alert("Register failed");
+			
+		},
+		timeout:10000,
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			BootstrapDialog.alert("Fail to connect to the server");
+
+			}
+		});
+		
+	}
+	
+		$(document).ready(function() {
+		
+
+			geochart.generate({
+				"bindTo": "#geochart-map",
+				"map": "../geochart-world.json",
+				"data": "data.json",
+				"format": {
+					"date": "DD.MM.YYYY"
+				},
+				"style": {
+					"seaColor": "#B8D5EA",
+					"countryColorRangeStart": "rgb(182,218,195)",
+					"countryColorRangeEnd": "rgb(7,84,37)",
+					"countryColorNoData": "#efefef",
+					"countryStrokeColor": "#CCC",
+					"countryStrokeWidthMin": "0.07",
+					"countryStrokeWidthMax": "0.3",
+					"selectedCountryColor": "#FFE700",
+					"selectedCountryStrokeColor": "#000000"
+				},
+				"label": {
+					"mapListTitle": "Data Distribution",
+					"configurationDataType": "DATA TYPE",
+					"configurationColorFunction": "COLOR FUNCTION",
+					"colorFunction": {
+						"log": "Logarithmic",
+						"linear": "Linear",
+						"quadratic": "Quadratic",
+						"sqrt": "Square Root",
+						"cubicroot": "Cubic Root"
+					}
+				},
+				"properties": {
+					"mapName": "geochart-world-map",
+					"zoomRange": [1, 9],
+					"fullscreen": true,
+					"noControls": {
+						"inGeneral": false,
+						"inSmallMap": true,
+						"smallMapThreshold": 600
+					}
+				}
+			});
+		});
+
+	</script>
+
+</body>
+</html>
